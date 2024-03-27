@@ -18,7 +18,7 @@ describe('CategoryToggle', () => {
   beforeEach(() => {
     // Clear mock and set a mock implementation before each test
     mockDispatch.mockClear();
-    useDispatch.mockReturnValue(mockDispatch);
+    (useDispatch as unknown as jest.Mock).mockReturnValue(mockDispatch);
   });
 
   it('dispatches setCategory action on press when not active', () => {

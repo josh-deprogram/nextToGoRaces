@@ -28,6 +28,7 @@ export const ListItem = (props: IProps) => {
         styles.buttonContainer,
         pressed && styles.buttonPressed,
       ]}
+      testID="listitem-test-id"
       onPress={onPress}>
       <View>
         <View style={styles.nameRow}>

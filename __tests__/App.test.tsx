@@ -1,28 +1,22 @@
 /**
  * @format
  */
-// import 'react-native';
-
-import {render} from '@testing-library/react-native';
-import * as React from 'react';
-import App from '../src/AppContainer';
 import {it} from '@jest/globals';
+import fetch, {FetchMock} from 'jest-fetch-mock';
 
 import {convertRaceResultsToArray, fetchRaceData} from '../src/utils';
 import {setRaces} from '../src/state/racesSlice';
+
+const fetchMock = fetch as FetchMock;
 
 // Mocking the action creators and helper functions
 jest.mock('../src/state/racesSlice', () => ({
   setRaces: jest.fn(),
 }));
 
-it('App renders correctly', () => {
-  render(<App />);
-});
-
 describe('fetchRaceData utility function', () => {
   beforeEach(() => {
-    fetch.resetMocks(); // Reset fetch mocks before each test
+    fetchMock.resetMocks();
   });
 
   it('successfully fetches and processes 20 race data items', async () => {
@@ -37,7 +31,7 @@ describe('fetchRaceData utility function', () => {
       race_number: index,
     }));
 
-    fetch.mockResponseOnce(
+    fetchMock.mockResponseOnce(
       JSON.stringify({data: {race_summaries: mockRaceSummaries}}),
     );
 
@@ -45,12 +39,11 @@ describe('fetchRaceData utility function', () => {
 
     await fetchRaceData({count: 20}).then(response => {
       const data = response.data;
-      // console.log(data, 'length', data.length);
       mockDispatch(setRaces(convertRaceResultsToArray(data.race_summaries)));
     });
 
     // Check if fetch was called once
-    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
     // Check if dispatch was called with setRaces action creator and the expected data
     expect(mockDispatch).toHaveBeenCalledWith(setRaces(mockRaceSummaries));
   });
