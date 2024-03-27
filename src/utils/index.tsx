@@ -1,5 +1,6 @@
-import {IRaceDataDTO} from '../App';
+import {IRaceDataDTO} from '../types';
 import {NEDS_ENDPOINT} from '../config';
+import {ITimeToStart} from '../types';
 
 /**
  * Fetch upcoming Race data
@@ -32,4 +33,22 @@ export const fetchRaceData = async ({
  */
 export const convertRaceResultsToArray = (raceResults: IRaceDataDTO): any[] => {
   return Object.values(raceResults);
+};
+
+export const calculateRemainingTime = (
+  advertisedStartInSeconds: number,
+): ITimeToStart => {
+  // Get current time in seconds
+  const currentTimeInSeconds = Date.now() / 1000;
+
+  // Calculate remaining time until the race starts
+  const remainingTimeInSeconds =
+    advertisedStartInSeconds - currentTimeInSeconds;
+
+  // Convert remaining time into hours, minutes, and seconds
+  const minutes = Math.floor((remainingTimeInSeconds % 3600) / 60);
+  const seconds = Math.floor(remainingTimeInSeconds % 60);
+
+  // Return remaining time as a string
+  return {minutes, seconds};
 };

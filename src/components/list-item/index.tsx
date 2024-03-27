@@ -1,12 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Text, Pressable, View} from 'react-native';
 import {styles} from './styles';
+import {ITimeToStart} from '../../types';
+import {colors} from '../../config';
 
 interface IProps {
   meeting_name: string;
   race_number: number;
   race_name: string;
-  start_time: number;
+  timeToStart: ITimeToStart;
+  start_time?: number;
   active?: boolean;
   onPress?: () => void;
 }
@@ -14,24 +17,11 @@ interface IProps {
 export const LIST_ITEM_HEIGHT = 60;
 
 export const ListItem = (props: IProps) => {
-  const {start_time} = props;
-  const [count, setCount] = useState('');
-  const date = new Date(start_time * 1000);
+  const {timeToStart} = props;
 
   const onPress = () => {
     props.onPress && props.onPress();
   };
-
-  // const formatTime = () => {
-  //   // return `${getTimeRemaining(date).minutes}m ${
-  //   //   getTimeRemaining(date).seconds
-  //   // }s `;
-  // };
-
-  // /* Hide if 1 min past the start time */
-  // if (getTimeRemaining(date).minutes <= -1) {
-  //   return null;
-  // }
 
   return (
     <Pressable
@@ -47,8 +37,14 @@ export const ListItem = (props: IProps) => {
         </View>
         <Text style={styles.raceName}>{props.race_name}</Text>
       </View>
-      <View>
-        <Text style={styles.time}>{count}</Text>
+      <View style={styles.timeContainer}>
+        <Text style={styles.time}>
+          {timeToStart.minutes > 0 ? `${timeToStart.minutes}min` : ''}{' '}
+          <Text
+            style={{
+              color: timeToStart.seconds < 0 ? 'red' : colors.primary,
+            }}>{`${timeToStart.seconds}sec`}</Text>
+        </Text>
       </View>
     </Pressable>
   );

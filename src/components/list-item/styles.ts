@@ -32,8 +32,10 @@ export const styles = StyleSheet.create({
     color: colors.primary,
   },
   time: {
-    fontSize: font.body,
     color: colors.primary,
     textAlign: 'right',
+  },
+  timeContainer: {
+    alignSelf: 'flex-end',
   },
 });
