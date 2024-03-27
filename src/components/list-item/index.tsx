@@ -10,7 +10,6 @@ interface IProps {
   race_name: string;
   timeToStart: ITimeToStart;
   start_time?: number;
-  active?: boolean;
   onPress?: () => void;
 }
 

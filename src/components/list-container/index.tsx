@@ -51,13 +51,14 @@ export const ListContainer = (props: ListContainerProps) => {
   };
 
   const renderRaceListItem = ({item}: {item: IRaceData; index: number}) => {
+    const timeToStart = calculateRemainingTime(item.advertised_start.seconds);
     return (
       <ListItem
         key={item.meeting_id}
         meeting_name={item.meeting_name}
         race_name={item.race_name}
         race_number={item.race_number}
-        timeToStart={calculateRemainingTime(item.advertised_start.seconds)}
+        timeToStart={timeToStart}
       />
     );
   };
