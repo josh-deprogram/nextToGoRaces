@@ -9,12 +9,12 @@ export interface IRaceData {
   meeting_name: string;
   race_form: {
     distance: number;
-    distance_type: any; // Replace `any` with a more specific type if possible
+    distance_type: any;
     distance_type_id: string;
-    track_condition: any; // Replace `any` with a more specific type if possible
+    track_condition: any;
     track_condition_id: string;
     race_comment: string;
-    additional_data: string; // This seems to be a JSON string, consider parsing it into an object
+    additional_data: string;
     generated: number;
     silk_base_url: string;
     race_comment_alternative: string;

@@ -1,30 +1,34 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {SafeAreaView} from 'react-native';
-import {ListHeader} from './components';
+import {useDispatch} from 'react-redux';
+import {setRaces} from './state/racesSlice';
+
+import {ListHeader, ListContainer} from './components';
 import {convertRaceResultsToArray, fetchRaceData} from './utils';
 import {colors} from './config';
-import {IRaceData} from './types';
-import ListContainer from './components/list-container';
 
 function App(): React.JSX.Element {
-  const [races, setRaces] = useState<IRaceData[]>([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchRaceData({count: 20}).then(response => {
-      const data = response.data;
-      console.log('race data', data);
-      setRaces(convertRaceResultsToArray(data.race_summaries));
-    });
+    fetchRaceData({count: 20})
+      .then(response => {
+        const data = response.data;
+        dispatch(setRaces(convertRaceResultsToArray(data.race_summaries)));
+      })
+      .catch(e => {
+        console.error('Failed to fetch races', e);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    // eslint-disable-next-line react-native/no-inline-styles
     <SafeAreaView style={{flex: 1, backgroundColor: colors.primary}}>
       <ListHeader
         title={'neds : next to go'}
         sub="Entain - Neds Races Concept"
       />
-      <ListContainer races={races} />
+      <ListContainer />
     </SafeAreaView>
   );
 }

@@ -3,20 +3,19 @@ import {FlatList} from 'react-native';
 import {ListItem} from '../';
 import {IRaceData} from '../../types';
 import {calculateRemainingTime} from '../../utils';
-import {RACE_CATEGORIES} from '../../config';
+import {useSelector} from 'react-redux';
+import {selectCategories} from '../../state/categorySlice';
+import {selectRaces} from '../../state/racesSlice';
 
 interface ListContainerProps {
-  races: IRaceData[];
   numberOfRaces?: number;
 }
+
 export const ListContainer = (props: ListContainerProps) => {
-  const {races, numberOfRaces = 5} = props;
+  const {numberOfRaces = 5} = props;
   const [filteredRaces, setFilteredRaces] = useState<IRaceData[]>([]);
-  const [activeCategories] = useState<string[]>([
-    RACE_CATEGORIES.greyhound,
-    RACE_CATEGORIES.thoroughbred,
-    RACE_CATEGORIES.harness,
-  ]);
+  const categories = useSelector(selectCategories);
+  const races = useSelector(selectRaces);
   let timer: any | null = useRef(null);
 
   useEffect(() => {
@@ -26,21 +25,28 @@ export const ListContainer = (props: ListContainerProps) => {
      * then filter via the active category type
      */
     timer.current = setInterval(() => {
-      const currentTimeInSeconds = Date.now() / 1000;
-      const limitResults = orderListByStartTime
-        .filter(r => {
-          return currentTimeInSeconds - r.advertised_start.seconds <= 60;
-        })
-        .filter(r => activeCategories.includes(r.category_id));
-
-      setFilteredRaces(limitResults.splice(0, numberOfRaces));
+      filterListItems();
     }, 1000);
+
+    // Fire the filter immediately
+    filterListItems();
 
     return () => {
       clearInterval(timer.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [races]);
+  }, [races, categories]);
+
+  const filterListItems = () => {
+    const currentTimeInSeconds = Date.now() / 1000;
+    const limitResults = orderListByStartTime
+      .filter(r => {
+        return currentTimeInSeconds - r.advertised_start.seconds <= 60;
+      })
+      .filter(r => categories.includes(r.category_id));
+
+    setFilteredRaces(limitResults.splice(0, numberOfRaces));
+  };
 
   const renderRaceListItem = ({item}: {item: IRaceData; index: number}) => {
     return (
@@ -55,12 +61,10 @@ export const ListContainer = (props: ListContainerProps) => {
   };
 
   const orderListByStartTime = useMemo((): IRaceData[] => {
-    return races.sort(
+    return [...races].sort(
       (a, b) => a.advertised_start.seconds - b.advertised_start.seconds,
     );
   }, [races]);
-
-  console.log('Races orderListByStartTime', orderListByStartTime);
 
   return <FlatList data={filteredRaces} renderItem={renderRaceListItem} />;
 };
