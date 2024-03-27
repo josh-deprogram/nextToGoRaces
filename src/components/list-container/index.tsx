@@ -3,6 +3,7 @@ import {FlatList} from 'react-native';
 import {ListItem} from '../';
 import {IRaceData} from '../../types';
 import {calculateRemainingTime} from '../../utils';
+import {RACE_CATEGORIES} from '../../config';
 
 interface ListContainerProps {
   races: IRaceData[];
@@ -11,18 +12,26 @@ interface ListContainerProps {
 export const ListContainer = (props: ListContainerProps) => {
   const {races, numberOfRaces = 5} = props;
   const [filteredRaces, setFilteredRaces] = useState<IRaceData[]>([]);
+  const [activeCategories] = useState<string[]>([
+    RACE_CATEGORIES.greyhound,
+    RACE_CATEGORIES.thoroughbred,
+    RACE_CATEGORIES.harness,
+  ]);
   let timer: any | null = useRef(null);
 
   useEffect(() => {
     /**
      * Create an interval to check the race start times
      * and filter out and races that have passed over 60 seconds the start time
+     * then filter via the active category type
      */
     timer.current = setInterval(() => {
       const currentTimeInSeconds = Date.now() / 1000;
-      const limitResults = orderListByStartTime.filter(r => {
-        return currentTimeInSeconds - r.advertised_start.seconds <= 60;
-      });
+      const limitResults = orderListByStartTime
+        .filter(r => {
+          return currentTimeInSeconds - r.advertised_start.seconds <= 60;
+        })
+        .filter(r => activeCategories.includes(r.category_id));
 
       setFilteredRaces(limitResults.splice(0, numberOfRaces));
     }, 1000);

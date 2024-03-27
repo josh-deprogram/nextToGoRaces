@@ -17,9 +17,8 @@ function App(): React.JSX.Element {
     });
   }, []);
 
-  console.log('Races', races);
-
   return (
+    // eslint-disable-next-line react-native/no-inline-styles
     <SafeAreaView style={{flex: 1, backgroundColor: colors.primary}}>
       <ListHeader
         title={'neds : next to go'}
