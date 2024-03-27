@@ -25,6 +25,7 @@ export const ListContainer = (props: ListContainerProps) => {
      * and filter out and races that have passed over 60 seconds the start time
      * then filter via the active category type
      */
+    if (timer.current) clearInterval(timer.current);
     timer.current = setInterval(() => {
       filterListItems();
     }, 1000);

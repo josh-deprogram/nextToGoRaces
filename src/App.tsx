@@ -15,6 +15,7 @@ function App(): React.JSX.Element {
       .then(response => {
         const data = response.data;
         dispatch(setRaces(convertRaceResultsToArray(data.race_summaries)));
+        // console.log(data, 'length', data.length);
       })
       .catch(e => {
         console.error('Failed to fetch races', e);

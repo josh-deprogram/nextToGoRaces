@@ -5,14 +5,14 @@ import {useDispatch} from 'react-redux';
 import {removeCategory, setCategory} from '../../state/categorySlice';
 import {colors} from '../../config';
 
-interface IProps {
+export interface IToggleProps {
   categoryName: 'Greyhound' | 'Harness' | 'Thoroughbred';
   categoryId: string;
   active?: boolean;
   onPress?: () => void;
 }
 
-export const CategoryToggle = (props: IProps) => {
+export const CategoryToggle = (props: IToggleProps) => {
   const {active, categoryName, categoryId} = props;
   const dispatch = useDispatch();
 
