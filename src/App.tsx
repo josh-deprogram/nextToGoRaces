@@ -11,7 +11,12 @@ function App(): React.JSX.Element {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchRaceData({count: 20})
+    fetchRaceResults();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchRaceResults = async () => {
+    fetchRaceData({count: 40})
       .then(response => {
         const data = response.data;
         dispatch(setRaces(convertRaceResultsToArray(data.race_summaries)));
@@ -20,8 +25,7 @@ function App(): React.JSX.Element {
       .catch(e => {
         console.error('Failed to fetch races', e);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.primary}}>
@@ -29,7 +33,7 @@ function App(): React.JSX.Element {
         title={'neds : next to go'}
         sub="Entain - Neds Races Concept"
       />
-      <ListContainer />
+      <ListContainer fetchRaceData={fetchRaceResults} />
     </SafeAreaView>
   );
 }

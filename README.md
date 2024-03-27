@@ -13,7 +13,9 @@ No styling libraries are used, although a fan of `styled-components`, this didn'
 The timer logic is handle in the ListContainer to centralize the logic for the filtering of the filtered items, as this seems more performant than implementing the timer on each instance of the ListItem.
 
 ## Data
-The API is fetched upon the application loading, and the data is stored in the redux store. This data is filtered on category choice and start time.
+The API is fetched upon the application loading, and the data is stored in the redux store. 
+This data is filtered on category choice and start time.
+The API is re-fetched if the filtered races list drops below 5.
 
 ## Show me
 

@@ -10,10 +10,11 @@ import {styles} from './styles';
 
 interface ListContainerProps {
   numberOfRaces?: number;
+  fetchRaceData: () => void;
 }
 
 export const ListContainer = (props: ListContainerProps) => {
-  const {numberOfRaces = 5} = props;
+  const {numberOfRaces = 5, fetchRaceData} = props;
   const [filteredRaces, setFilteredRaces] = useState<IRaceData[]>([]);
   const categories = useSelector(selectCategories);
   const races = useSelector(selectRaces);
@@ -47,7 +48,15 @@ export const ListContainer = (props: ListContainerProps) => {
       })
       .filter(r => categories.includes(r.category_id));
 
-    setFilteredRaces(limitResults.splice(0, numberOfRaces));
+    const featuredResults = limitResults.splice(0, numberOfRaces);
+    setFilteredRaces(featuredResults);
+
+    /**
+     * If we have less than 5 results & a category set, refetch the API
+     */
+    if (featuredResults.length < 5 && categories.length) {
+      fetchRaceData();
+    }
   };
 
   const renderRaceListItem = ({item}: {item: IRaceData; index: number}) => {
