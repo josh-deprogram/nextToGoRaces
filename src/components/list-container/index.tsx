@@ -1,11 +1,12 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {FlatList} from 'react-native';
-import {ListItem} from '../';
-import {IRaceData} from '../../types';
-import {calculateRemainingTime} from '../../utils';
+import {FlatList, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {selectCategories} from '../../state/categorySlice';
 import {selectRaces} from '../../state/racesSlice';
+import {ListItem} from '../';
+import {IRaceData} from '../../types';
+import {calculateRemainingTime} from '../../utils';
+import {styles} from './styles';
 
 interface ListContainerProps {
   numberOfRaces?: number;
@@ -65,6 +66,16 @@ export const ListContainer = (props: ListContainerProps) => {
       (a, b) => a.advertised_start.seconds - b.advertised_start.seconds,
     );
   }, [races]);
+
+  if (!filteredRaces.length) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.emptyResult}>
+          No upcomings races 😔 {'\n'}try a different category
+        </Text>
+      </View>
+    );
+  }
 
   return <FlatList data={filteredRaces} renderItem={renderRaceListItem} />;
 };
